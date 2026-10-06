@@ -29,7 +29,8 @@ router.get('/', protectRoute, async (req, res) => {
         const books = await Book.find().sort({ createdAt: -1 })
             .skip(skip).limit(limit).populate('user', 'username profileImage')
         const totalBooks = await Book.countDocuments()
-        res.send({books, currentPage, totalBooks:totalBooks, totalPages:Math.ceil(totalBooks/limit)})
+        res.send({books, totalBooks:totalBooks, totalPages:Math.ceil(totalBooks/limit)})
+        // res.send({books, currentPage, totalBooks:totalBooks, totalPages:Math.ceil(totalBooks/limit)})
     } catch (error) {
         console.log('error in get all books route', error)
         res.status(500).json({message:'internal server error'})
