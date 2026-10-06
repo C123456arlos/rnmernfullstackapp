@@ -3,16 +3,16 @@ import cloudinary from '../lib/cloudinary.js'
 import Book from '../models/Book.js'
 import protectRoute from '../middleware/auth.middleware.js'
 const router = express.Router()
-router.post('/', protectRoute, async (req, res) => {
+router.post('/',protectRoute, async (req, res) => {
     try {
-        const { title, caption, rating, image } = req.body
+        const { title, caption, rating, image} = req.body
         if (!image || !title || !caption || !rating) {
             res.status(400).json({ message: 'please provide all fields' })
         }
         const uploadResponse = await cloudinary.uploader.upload(image)
         const imageUrl = uploadResponse.secure_url
         const newBook = new Book({
-            title, caption, rating, image: imageUrl,user:req.user._id
+            title, caption, rating, image:imageUrl, user:req.user._id
         })
         await newBook.save()
         res.status(201).json(newBook)
@@ -37,7 +37,7 @@ router.get('/', protectRoute, async (req, res) => {
 })
 router.get('/user', protectRoute, async (req, res) => {
     try {
-        const books = await Books.find({ user: req.user._id }).sort({ createdAt: -1 })
+        const books = await Book.find({ user: req.user._id }).sort({ createdAt: -1 })
         res.json(books)
     } catch (error) {
         console.error('get user books error', error.message)
@@ -66,3 +66,4 @@ router.delete('/:id', protectRoute, async (req, res) => {
     }
 })
 export default router
+// 10:44
